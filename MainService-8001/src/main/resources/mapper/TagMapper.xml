@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="platform.mapper.TagMapper">
+    <insert id="addTag" parameterType="entity.Tag">
+        insert into tag
+        values (#{tagId}, #{tagName}, #{description}, #{type}, 0, #{createdBy}, #{dateCreated});
+    </insert>
+
+    <delete id="deleteTag">
+        delete
+        from tag
+        where tag_id = #{tagId};
+    </delete>
+
+    <update id="updateTag">
+        update tag
+        set description=#{description},
+            tag_name=#{tagName},
+            type=#{type}
+        where tag_id = #{tagId};
+    </update>
+
+    <select id="getRuleTag">
+        select count(*)
+        from tag
+        where type = 2;
+    </select>
+
+    <select id="getLocalTag">
+        select count(*)
+        from tag
+        where type = 0;
+    </select>
+
+    <select id="getTags" resultType="entity.Tag">
+        select *
+        from tag limit #{start}, #{size}
+    </select>
+
+    <select id="queryTagDetail" resultType="entity.Tag">
+        select *
+        from tag
+        where tag_id = #{tagId};
+    </select>
+
+    <select id="queryRuleTag" resultType="entity.RuleTag">
+        select *
+        from rule_tag
+        where tag_id = #{tagId};
+    </select>
+
+</mapper>

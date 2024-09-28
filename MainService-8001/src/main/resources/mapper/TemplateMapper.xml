@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="platform.mapper.TemplateMapper">
+    <select id="selectTemplates" resultType="entity.Template">
+        select template_id, template_type, template_name, template_created_by from template
+        <where>
+            <if test="templateType != null and templateType != ''">
+                template_type = #{templateType}
+            </if>
+            <if test="templateName != null and templateName != ''">
+                and template_name = #{templateName}
+            </if>
+            <if test="templateId != null and templateId != ''">
+                and template_id = #{templateId}
+            </if>
+        </where>
+        limit #{start}, #{pageSize}
+    </select>
+
+    <select id="totalTemplate" resultType="Integer">
+        select COUNT(*) from template
+        <where>
+            <if test="templateType != null and templateType != ''">
+                template_type = #{templateType}
+            </if>
+            <if test="templateName != null and templateName != ''">
+                and template_name = #{templateName}
+            </if>
+            <if test="templateId != null and templateId != ''">
+                and template_id = #{templateId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertTemplate" parameterType="entity.NewTemplate">
+        insert into template
+        values (#{templateId}, #{templateType}, #{templateName}, #{templateContent}, #{templateParams}, #{wxTemplateId}, #{templateCreatedBy})
+    </insert>
+</mapper>

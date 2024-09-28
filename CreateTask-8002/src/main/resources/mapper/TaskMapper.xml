@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="task.mapper.TaskMapper">
+    <insert id="createTask" parameterType="entity.Task">
+        insert into wechat_task
+        values (#{taskId}, #{creator}, #{taskTitle}, #{taskStatus}, NOW(), #{finishTime});
+    </insert>
+
+    <select id="getTaskList" parameterType="entity.Task" resultType="entity.Task">
+        select * from wechat_task
+        <where>
+            <if test="creator != null and creator != ''">
+                creator=#{creator}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and create_time &lt;= #{endTime}
+            </if>
+            <if test="taskType != null and taskType != ''">
+                and task_title = #{taskType}
+            </if>
+        </where>
+        limit #{start}, #{pageSize}
+    </select>
+</mapper>

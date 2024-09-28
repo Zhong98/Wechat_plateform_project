@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="platform.mapper.FanMapper">
+    <select id="queryFansCount" parameterType="entity.FanInfo" resultType="String">
+        select openid from wechat_fans_info
+        <where>
+            <if test="sex != null">
+                sex = #{sex}
+            </if>
+            <if test="subscribeScene != null and subscribeScene != ''">
+                and subscribe_scene = #{subscribeScene}
+            </if>
+            <if test="bindStatus != null">
+                <if test="bindStatus == 0">
+                    and openid not in (select distinct openid from wechat_fans_bind)
+                </if>
+                <if test="bindStatus == 1">
+                    and openid in (select distinct openid from wechat_fans_bind)
+                </if>
+            </if>
+            <if test="subscribeTimeStart != null and subscribeTimeStart != ''">
+                and subscribe_time > #{subscribeTimeStart}
+            </if>
+            <if test="subscribeTimeEnd != null and subscribeTimeEnd != ''">
+                and subscribe_time &lt; DATE_ADD(#{subscribeTimeEnd}, INTERVAL 1 DAY)
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertFanTagBinding">
+        insert into fans_tag_bind (openid, tag_id) values
+        <foreach collection="openidList" item="openid" separator=",">
+            (#{openid},#{tagId})
+        </foreach>
+    </insert>
+</mapper>
